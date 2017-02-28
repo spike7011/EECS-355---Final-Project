@@ -5,7 +5,8 @@ use IEEE.std_logic_1164.all;
 
 package tank_package is
 	constant BOUNDING_BOX_CORNERS : natural := 4;
-	type bounding_box is array(0 to BOUNDING_BOX_CORNERS - 1) of integer;
+	type coordinate is array(0 to 1) of integer; -- (x, y)
+	type bounding_box is array(0 to BOUNDING_BOX_CORNERS - 1) of coordinate; -- (topleft, topright, bottomleft, bottomright)
 end package tank_package;
 package body tank_package is
 
