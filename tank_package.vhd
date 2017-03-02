@@ -17,16 +17,6 @@ package tank_package is
 		x_out : out integer);
 	end component;
 
-
-
-
-
-
-
-
-
-
-
 end package tank_package;
 package body tank_package is
 
