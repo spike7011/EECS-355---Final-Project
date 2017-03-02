@@ -16,17 +16,16 @@ package tank_package is
 		SPEED : in integer;
 		x_out : out integer);
 	end component;
-
-
-
-
-
-
-
-
-
-
-
+	
+	component collision_detector is
+		port (
+			bounding_box_a : in bounding_box;
+			bounding_box_b : in bounding_box;
+			collision : out std_logic
+		);
+	end component;
+	
+end entity collision_detector;
 end package tank_package;
 package body tank_package is
 
