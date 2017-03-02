@@ -25,7 +25,6 @@ package tank_package is
 		);
 	end component;
 
-end entity collision_detector;
 end package tank_package;
 package body tank_package is
 
