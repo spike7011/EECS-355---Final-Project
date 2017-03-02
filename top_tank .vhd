@@ -22,10 +22,11 @@ architecture behav of top_tank is
 			variable x_last : integer := 0;
 			begin
 				if rising_edge(clk) then
+					-- blah blah
 
-					if (x_last <= x_in) then
-						DIRECTION := 1;
-					else DIRECTION := -1;
+					if (x_in >= 640) then
+						DIRECTION := -1;
+					elsif(x_in <= 0 ) then DIRECTION := 1;
 				end if;
 
 				case DIRECTION is
