@@ -13,7 +13,7 @@ entity collision_detector is
 end entity collision_detector;
 
 architecture behavioral of collision_detector is
-
+	signal overlap_left, overlap_right, overlap_top, overlap_bottom : std_logic;
 begin
 	check_collision: process (bounding_box_a, bounding_box_b)
 	begin
