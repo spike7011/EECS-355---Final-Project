@@ -14,7 +14,7 @@ architecture behavior of collision_detector_tb is
 begin
 	DUT: entity work.collision_detector
 		port map (bounding_box_a, bounding_box_b, collision);
-	
+		
 	test: process
 	begin
 		bounding_box_a <= (0,1,0,1);
