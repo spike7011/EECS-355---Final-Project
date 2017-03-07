@@ -17,6 +17,20 @@ package tank_package is
 		SPEED : in integer;
 		x_out : out integer);
 	end component;
+	
+	component bullet_position is
+		port (
+			clk: in std_logic;
+			reset: in std_logic;
+			direction: in std_logic;
+			bullet_fired: in std_logic;
+			current_bullet_exists: in std_logic;
+			current_bullet_position : in coordinate;
+			current_tank_position: in coordinate;
+			new_bullet_position: out coordinate;
+			new_bullet_exists: out std_logic
+		);
+	end component;
 
 	component collision_detector is
 		port (
