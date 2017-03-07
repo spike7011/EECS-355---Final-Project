@@ -10,3 +10,5 @@ bullet_position: calculates next bullet position
 
 collision_detector: takes two bounding boxes and returns whether they are colliding
 
+bullet_hit: checks if a bullet hits the enemy tank
+
