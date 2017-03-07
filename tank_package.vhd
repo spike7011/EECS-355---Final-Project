@@ -4,6 +4,7 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 
 package tank_package is
+	constant BULLET_SPEED : integer := 2;
 	constant BOUNDING_BOX_CORNERS : natural := 4;
 	type bounding_box is array(0 to BOUNDING_BOX_CORNERS - 1) of integer; -- (x_left, x_right, y_top, y_bottom)
 	type coordinate is array(0 to 1) of integer; -- (x, y)
