@@ -7,7 +7,9 @@ entity pixelGenerator is
 	port(
 			clk, ROM_clk, rst_n, video_on, eof 				: in std_logic;
 			pixel_row, pixel_column						    : in std_logic_vector(9 downto 0);
-			red_out, green_out, blue_out					: out std_logic_vector(9 downto 0)
+			red_out, green_out, blue_out					: out std_logic_vector(9 downto 0);
+			offset                                    : in integer
+			 
 		);
 end entity pixelGenerator;
 
@@ -30,6 +32,8 @@ component colorROM is
 		q			: out std_logic_vector (29 downto 0)
 	);
 end component colorROM;
+
+
 
 signal colorAddress : std_logic_vector (2 downto 0);
 signal color        : std_logic_vector (29 downto 0);
@@ -59,19 +63,25 @@ begin
 	begin
 			
 		if (rising_edge(clk)) then
-		
-			if (pixel_row_int < 240 and pixel_column_int < 320) then
-				colorAddress <= color_green;
-			elsif (pixel_row_int >= 240 and pixel_column_int < 320) then
-				colorAddress <= color_yellow;
-			elsif (pixel_row_int < 240 and pixel_column_int >= 320) then
+		--	if (pixel_row_int < 240 and pixel_column_int < 320) then
+		--		colorAddress <= color_green;
+		--	elsif (pixel_row_int >= 240 and pixel_column_int < 320) then
+		--		colorAddress <= color_yellow;
+			if (pixel_row_int < 80 and pixel_column_int > (offset) and pixel_column_int < (120 + offset)) then
 				colorAddress <= color_red;
-			elsif (pixel_row_int >= 240 and pixel_column_int >= 320) then
+			elsif (pixel_row_int >400 and pixel_column_int >(offset) and pixel_column_int < (120+offset)) then
 				colorAddress <= color_blue;
+			elsif (pixel_row_int <110 and pixel_row_int >80 and pixel_column_int > (offset + 50) and pixel_column_int <(70 + offset)) then
+				colorAddress <= color_red;
+			elsif (pixel_row_int <400 and pixel_row_int >370 and pixel_column_int > (offset + 50) and pixel_column_int <(70 + offset)) then
+				colorAddress <= color_blue;
+			elsif (pixel_row_int <115 and pixel_row_int >110 and pixel_column_int > (offset + 50) and pixel_column_int < (offset + 70)) then
+				colorAddress <= color_black;
+			elsif (pixel_row_int <370 and pixel_row_int >365 and pixel_column_int > (offset + 50) and pixel_column_int <(offset + 70)) then
+				colorAddress <= color_black;
 			else
 				colorAddress <= color_white;
 			end if;
-			
 		end if;
 		
 	end process pixelDraw;	

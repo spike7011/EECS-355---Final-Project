@@ -20,7 +20,8 @@ component pixelGenerator is
 	port(
 			clk, ROM_clk, rst_n, video_on, eof 				: in std_logic;
 			pixel_row, pixel_column						    : in std_logic_vector(9 downto 0);
-			red_out, green_out, blue_out					: out std_logic_vector(9 downto 0)
+			red_out, green_out, blue_out					: out std_logic_vector(9 downto 0);
+			offset                                    : in integer
 		);
 end component pixelGenerator;
 
@@ -33,19 +34,31 @@ component VGA_SYNC is
 		);
 end component VGA_SYNC;
 
+component top_tank is
+	port(
+	clk : in std_logic;
+	rst : in std_logic;
+	SPEED : in integer;
+	x_out : out integer);
+end component;
+
 --Signals for VGA sync
 signal pixel_row_int 										: std_logic_vector(9 downto 0);
 signal pixel_column_int 									: std_logic_vector(9 downto 0);
 signal video_on_int											: std_logic;
 signal VGA_clk_int											: std_logic;
 signal eof													: std_logic;
-
+signal  x_out                                           : integer;
+signal speed                                       : integer;
 begin
 
 --------------------------------------------------------------------------------------------
 
+
+	tank_logic : top_tank port map(CLOCK_50, RESET_N, 1, x_out);
+
 	videoGen : pixelGenerator
-		port map(CLOCK_50, VGA_clk_int, RESET_N, video_on_int, eof, pixel_row_int, pixel_column_int, VGA_RED, VGA_GREEN, VGA_BLUE);
+		port map(CLOCK_50, VGA_clk_int, RESET_N, video_on_int, eof, pixel_row_int, pixel_column_int, VGA_RED, VGA_GREEN, VGA_BLUE, 1);
 
 --------------------------------------------------------------------------------------------
 --This section should not be modified in your design.  This section handles the VGA timing signals
