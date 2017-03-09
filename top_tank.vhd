@@ -5,7 +5,6 @@ USE IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity top_tank is
 	port(
-	clk : in std_logic;
 	rst : in std_logic;
 	x_in : in integer;
 	SPEED : in integer;
@@ -17,13 +16,11 @@ architecture behav of top_tank is
 
 	begin
 
-		tank_process : process(clk, rst) is
+		tank_process : process(x_in) is
 			variable DIRECTION : integer;
 			variable x_last : integer := 60;
 			begin
-				if falling_edge(clk) then
-
-					if (x_last >= 580) then
+				if (x_last >= 580) then
 						DIRECTION := -1;
 					elsif(x_last <= 60 ) then DIRECTION := 1;
 					else DIRECTION := 0;
@@ -35,13 +32,11 @@ architecture behav of top_tank is
 					when others => x_out <= x_last;
 				end case;
 			x_last := x_last;
-			x_out <= 1;
-			
-			elsif (rst = '1') then
-				x_out <= 1;
+			if (rst = '1') then
+				
 				x_last := x_last;
-			
-			else x_out <= 1;
 			end if;
+			x_out <= x_last;
+			
 		end process;
 	end architecture;

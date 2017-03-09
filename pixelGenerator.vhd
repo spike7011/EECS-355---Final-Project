@@ -8,7 +8,7 @@ entity pixelGenerator is
 			clk, ROM_clk, rst_n, video_on, eof 				: in std_logic;
 			pixel_row, pixel_column						    : in std_logic_vector(9 downto 0);
 			red_out, green_out, blue_out					: out std_logic_vector(9 downto 0);
-			offset                                    : in integer
+			offset_in                                    : in integer
 			 
 		);
 end entity pixelGenerator;
@@ -23,7 +23,15 @@ constant color_magenta 	 : std_logic_vector(2 downto 0) := "100";
 constant color_cyan 	 : std_logic_vector(2 downto 0) := "101";
 constant color_black 	 : std_logic_vector(2 downto 0) := "110";
 constant color_white	 : std_logic_vector(2 downto 0) := "111";
-	
+
+component top_tank is
+	port(
+	rst : in std_logic;
+	x_in : in integer;
+	SPEED : in integer;
+	x_out : out integer);
+end component;
+
 component colorROM is
 	port
 	(
@@ -39,6 +47,7 @@ signal colorAddress : std_logic_vector (2 downto 0);
 signal color        : std_logic_vector (29 downto 0);
 
 signal pixel_row_int, pixel_column_int : natural;
+signal offset        : integer;
 
 begin
 
@@ -57,7 +66,7 @@ begin
 		port map(colorAddress, ROM_clk, color);
 
 --------------------------------------------------------------------------------------------	
-
+tank_offset: top_tank port map(rst_n, offset_in, 1, offset);
 	pixelDraw : process(clk, rst_n) is
 	
 	begin
