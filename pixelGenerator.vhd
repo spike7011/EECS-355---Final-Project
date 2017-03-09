@@ -8,7 +8,7 @@ entity pixelGenerator is
 			clk, ROM_clk, rst_n, video_on, eof 				: in std_logic;
 			pixel_row, pixel_column						    : in std_logic_vector(9 downto 0);
 			red_out, green_out, blue_out					: out std_logic_vector(9 downto 0);
-			offset_in                                    : in integer
+			tank_x                                    : in integer
 			 
 		);
 end entity pixelGenerator;
@@ -66,7 +66,7 @@ begin
 		port map(colorAddress, ROM_clk, color);
 
 --------------------------------------------------------------------------------------------	
-tank_offset: top_tank port map(rst_n, offset_in, 1, offset);
+tank_offset: top_tank port map(rst_n, tank_x, 1, offset);
 	pixelDraw : process(clk, rst_n) is
 	
 	begin
