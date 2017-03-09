@@ -17,7 +17,6 @@ package tank_package is
 		clk : in std_logic;
 		rst : in boolean;
 		x_in : in integer;
-		SPEED : in integer;
 		x_out : out integer);
 	end component;
 	
