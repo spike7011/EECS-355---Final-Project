@@ -15,7 +15,7 @@ package tank_package is
 	component top_tank is
 		port(
 		clk : in std_logic;
-		rst : in boolean;
+		rst : in std_logic;
 		x_in : in integer;
 		x_out : out integer);
 	end component;
@@ -49,6 +49,17 @@ package tank_package is
 			hit: out std_logic
 		);
 	end component;
+
+	component integer_register is
+		port(
+			clk : in std_logic;
+			int_in : in integer;
+			int_out : inout integer);
+	end component;
+
+
+
+
 
 end package tank_package;
 package body tank_package is

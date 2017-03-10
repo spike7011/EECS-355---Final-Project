@@ -7,7 +7,7 @@ entity pixelGenerator is
 	port(
 			clk, ROM_clk, rst_n, video_on, eof 				: in std_logic;
 			pixel_row, pixel_column						    : in std_logic_vector(9 downto 0);
-			tank_x                                    		: in integer;
+			offset                                    		: in integer;
 			red_out, green_out, blue_out					: out std_logic_vector(9 downto 0)
 		);
 end entity pixelGenerator;
@@ -46,7 +46,6 @@ signal colorAddress : std_logic_vector (2 downto 0);
 signal color        : std_logic_vector (29 downto 0);
 
 signal pixel_row_int, pixel_column_int : natural;
-signal offset        : integer;
 
 begin
 

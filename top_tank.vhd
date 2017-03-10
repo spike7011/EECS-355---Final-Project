@@ -19,12 +19,12 @@ begin
 	begin
 		x_last := x_last;
 		if (rising_edge(clk)) then
-			if (x_last >= 580) then
+			if (x_last >= 520) then
 				DIRECTION := -1;
-			elsif (x_last <= 60 ) then
+			elsif (x_last <= 0 ) then
 				DIRECTION := 1;
 			else
-				DIRECTION := 0;
+				DIRECTION := DIRECTION;
 			end if;
 
 			x_last := x_last + DIRECTION;
