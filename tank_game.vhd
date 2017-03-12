@@ -30,35 +30,48 @@ architecture behavior of tank_game is
 	
 
 	signal tank_x, new_tank_x : integer;
+	signal speed : integer;
 	signal tank_clk : std_logic;
+	signal hist3_signal, hist2_signal, hist1_signal, hist0_signal: std_logic_vector(7 downto 0);
+	signal scan_code_signal : std_logic_vector( 7 downto 0 );
+	signal scan_readyo_signal : std_logic;
 begin
 	vga: VGA_top_level
 			port map (clk, reset, new_tank_x, VGA_RED, VGA_GREEN, VGA_BLUE, HORIZ_SYNC, VERT_SYNC, VGA_BLANK, VGA_CLK);
 
 	tank: top_tank
-		port map (tank_clk, reset, tank_x, keyboard_clk, keyboard_data, new_tank_x);
+		port map (tank_clk, reset, tank_x, new_tank_x);
+
+	tank_clock_a: tank_clock
+		port map (clk, reset, speed, tank_clk); 
 
 	tank_x_register: integer_register
 		port map (tank_clk, new_tank_x, tank_x);
 
-	tank_clock: process(clk, reset) is
-		variable counter : integer := 0;
-	begin
-		counter := counter;
+	keyboard_map : ps2 port map(keyboard_clk, keyboard_data, clk, reset,scan_code_signal,scan_readyo_signal,hist3_signal,hist2_signal,hist1_signal,hist0_signal);
+
+	p1: process(clk,reset)
+		variable speed_temp : integer;
+	begin	
 		if (rising_edge(clk)) then
-			counter := counter + 1;
-			if (counter = 100000) then
-				tank_clk <= '1';
-			elsif (counter = 200000) then
-				counter := 0;
-				tank_clk <= '0';
+			speed_temp := speed_temp;
+			if (scan_readyo_signal='1' and hist1_signal="11110000") then
+				if(scan_code_signal=x"1D") then -- w
+					if (speed < 3) then
+						speed_temp := speed_temp + 1;
+					end if;
+				elsif(scan_code_signal=x"15") then -- q
+					if (speed > 1) then
+						speed_temp := speed_temp - 1;
+					end if;
+				end if;
 			end if;
 		end if;
-		
-		if (reset = '1') then
-			counter := 0;
-			tank_clk <= '0';
-		end if;
-	end process tank_clock;
 
+		if (reset = '1') then
+			speed_temp := 1;
+		end if;
+
+		speed <= speed_temp;
+	end process p1;
 end architecture behavior;

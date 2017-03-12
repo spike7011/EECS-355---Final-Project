@@ -17,8 +17,27 @@ package tank_package is
 		clk : in std_logic;
 		rst : in std_logic;
 		x_in : in integer;
-		keyboard_clk, keyboard_data:in std_logic;
 		x_out : out integer);
+	end component;
+	component ps2 is
+		port( 	keyboard_clk, keyboard_data, clock_50MHz ,
+			reset : in std_logic;--, read : in std_logic;
+			scan_code : out std_logic_vector( 7 downto 0 );
+			scan_readyo : out std_logic;
+			hist3 : out std_logic_vector(7 downto 0);
+			hist2 : out std_logic_vector(7 downto 0);
+			hist1 : out std_logic_vector(7 downto 0);
+			hist0 : out std_logic_vector(7 downto 0)
+		);
+	end component;
+
+	component tank_clock is
+		port (
+			clk			: in std_logic;
+			reset			: in std_logic;
+			speed			: in integer;
+			tank_clk		: out std_logic
+		);
 	end component;
 	
 	component bullet_position is
