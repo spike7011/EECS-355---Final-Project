@@ -7,9 +7,13 @@ entity tank_game is
 	port (
 		clk				: in std_logic;
 		reset			: in std_logic;
+		--hist1_signal: in std_logic_vector(7 downto 0);
+		--scan_code_signal : in std_logic_vector( 7 downto 0 );
+		--scan_readyo_signal : in std_logic
 		keyboard_clk, keyboard_data:in std_logic;
 		VGA_RED, VGA_GREEN, VGA_BLUE 					: out std_logic_vector(9 downto 0); 
 		HORIZ_SYNC, VERT_SYNC, VGA_BLANK, VGA_CLK		: out std_logic
+		
 	);
 
 end entity tank_game;
@@ -37,7 +41,7 @@ architecture behavior of tank_game is
 	signal scan_readyo_signal : std_logic;
 begin
 	vga: VGA_top_level
-			port map (clk, reset, new_tank_x, VGA_RED, VGA_GREEN, VGA_BLUE, HORIZ_SYNC, VERT_SYNC, VGA_BLANK, VGA_CLK);
+		port map (clk, reset, new_tank_x, VGA_RED, VGA_GREEN, VGA_BLUE, HORIZ_SYNC, VERT_SYNC, VGA_BLANK, VGA_CLK);
 
 	tank: top_tank
 		port map (tank_clk, reset, tank_x, new_tank_x);
@@ -50,20 +54,18 @@ begin
 
 	keyboard_map : ps2 port map(keyboard_clk, keyboard_data, clk, reset,scan_code_signal,scan_readyo_signal,hist3_signal,hist2_signal,hist1_signal,hist0_signal);
 
-	p1: process(clk,reset)
+	p1: process(scan_readyo_signal, reset)
 		variable speed_temp : integer;
 	begin	
-		if (rising_edge(clk)) then
-			speed_temp := speed_temp;
-			if (scan_readyo_signal='1' and hist1_signal="11110000") then
-				if(scan_code_signal=x"1D") then -- w
-					if (speed < 3) then
-						speed_temp := speed_temp + 1;
-					end if;
-				elsif(scan_code_signal=x"15") then -- q
-					if (speed > 1) then
-						speed_temp := speed_temp - 1;
-					end if;
+		speed_temp := speed_temp;
+		if (rising_edge(scan_readyo_signal)) then
+			if(scan_code_signal=x"1D") then -- w
+				if (speed < 3) then
+					speed_temp := speed_temp + 1;
+				end if;
+			elsif(scan_code_signal=x"15") then -- q
+				if (speed > 1) then
+					speed_temp := speed_temp - 1;
 				end if;
 			end if;
 		end if;
