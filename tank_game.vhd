@@ -72,13 +72,13 @@ begin
 	begin	
 		speed_temp := speed_temp;
 		if (rising_edge(scan_readyo_signal)) then
-			if(scan_code_signal=x"1D") then -- w
+			if(hist0_signal = x"1D" and hist1_signal =x"F0" and hist2_signal = x"1D") then -- w
 				if (speed_temp < 3) then
 					speed_temp := speed_temp + 1;
 				else
 					speed_temp := speed_temp;
 				end if;
-			elsif(scan_code_signal=x"15") then -- q
+			elsif(hist0_signal = x"15" and hist1_signal =x"F0" and hist2_signal = x"15")then -- q
 				if (speed_temp > 1) then
 					speed_temp := speed_temp - 1;
 				else
