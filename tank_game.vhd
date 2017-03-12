@@ -39,6 +39,7 @@ architecture behavior of tank_game is
 	signal hist3_signal, hist2_signal, hist1_signal, hist0_signal: std_logic_vector(7 downto 0);
 	signal scan_code_signal : std_logic_vector( 7 downto 0 );
 	signal scan_readyo_signal : std_logic;
+	signal not_reset: std_logic;
 begin
 	vga: VGA_top_level
 		port map (clk, reset, new_tank_x, VGA_RED, VGA_GREEN, VGA_BLUE, HORIZ_SYNC, VERT_SYNC, VGA_BLANK, VGA_CLK);
@@ -52,7 +53,9 @@ begin
 	tank_x_register: integer_register
 		port map (tank_clk, new_tank_x, tank_x);
 
-	keyboard_map : ps2 port map(keyboard_clk, keyboard_data, clk, reset,scan_code_signal,scan_readyo_signal,hist3_signal,hist2_signal,hist1_signal,hist0_signal);
+	not_reset <= not reset;
+
+	keyboard_map : ps2 port map(keyboard_clk, keyboard_data, clk, not_reset,scan_code_signal,scan_readyo_signal,hist3_signal,hist2_signal,hist1_signal,hist0_signal);
 
 	p1: process(scan_readyo_signal, reset)
 		variable speed_temp : integer;
