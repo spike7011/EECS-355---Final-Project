@@ -11,6 +11,7 @@ entity tank_game is
 		--scan_code_signal : in std_logic_vector( 7 downto 0 );
 		--scan_readyo_signal : in std_logic
 		keyboard_clk, keyboard_data:in std_logic;
+		test1, test2, test3: out std_logic;
 		VGA_RED, VGA_GREEN, VGA_BLUE 					: out std_logic_vector(9 downto 0); 
 		HORIZ_SYNC, VERT_SYNC, VGA_BLANK, VGA_CLK		: out std_logic
 		
@@ -63,13 +64,13 @@ begin
 		speed_temp := speed_temp;
 		if (scan_readyo_signal = '1' and hist1_signal = x"F0") then
 			if(scan_code_signal=x"1D") then -- w
-				if (speed < 3) then
+				if (speed_temp < 3) then
 					speed_temp := speed_temp + 1;
 				else
 					speed_temp := speed_temp;
 				end if;
 			elsif(scan_code_signal=x"15") then -- q
-				if (speed > 1) then
+				if (speed_temp > 1) then
 					speed_temp := speed_temp - 1;
 				else
 					speed_temp := speed_temp;
@@ -82,7 +83,19 @@ begin
 		if (reset = '1') then
 			speed_temp := 1;
 		end if;
-
+		
 		speed <= speed_temp;
 	end process p1;
+	p2: process(speed)
+	begin
+	if(speed = 1) then
+	test1 <= '1';else test1 <= '0';
+	end if;
+	if(speed =2) then
+	test2 <= '1'; else test2 <= '0';
+	end if;
+	if(speed =3) then
+	test3 <= '1'; else test3 <= '0';
+	end if;
+	end process p2;
 end architecture behavior;
