@@ -65,10 +65,14 @@ begin
 			if(scan_code_signal=x"1D") then -- w
 				if (speed < 3) then
 					speed_temp := speed_temp + 1;
+				else
+					speed_temp := speed_temp;
 				end if;
 			elsif(scan_code_signal=x"15") then -- q
 				if (speed > 1) then
 					speed_temp := speed_temp - 1;
+				else
+					speed_temp := speed_temp;
 				end if;
 			else
 				speed_temp := speed_temp;
