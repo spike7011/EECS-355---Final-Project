@@ -63,13 +63,13 @@ begin
 		speed_temp := speed_temp;
 		if (scan_readyo_signal = '1' and hist1_signal = x"F0") then
 			if(scan_code_signal=x"1D") then -- w
-				if (speed < 3) then
+				if (speed_temp < 3) then
 					speed_temp := speed_temp + 1;
 				else
 					speed_temp := speed_temp;
 				end if;
 			elsif(scan_code_signal=x"15") then -- q
-				if (speed > 1) then
+				if (speed_temp > 1) then
 					speed_temp := speed_temp - 1;
 				else
 					speed_temp := speed_temp;
