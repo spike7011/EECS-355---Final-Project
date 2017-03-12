@@ -23,14 +23,6 @@ constant color_cyan 	 : std_logic_vector(2 downto 0) := "101";
 constant color_black 	 : std_logic_vector(2 downto 0) := "110";
 constant color_white	 : std_logic_vector(2 downto 0) := "111";
 
-component top_tank is
-	port(
-	rst : in std_logic;
-	x_in : in integer;
-	SPEED : in integer;
-	x_out : out integer);
-end component;
-
 component colorROM is
 	port
 	(

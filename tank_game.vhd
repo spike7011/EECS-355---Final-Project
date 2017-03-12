@@ -12,6 +12,7 @@ entity tank_game is
 		--scan_readyo_signal : in std_logic
 		keyboard_clk, keyboard_data:in std_logic;
 		test1, test2, test3: out std_logic;
+		leds: out std_logic_vector (6 downto 0);
 		VGA_RED, VGA_GREEN, VGA_BLUE 					: out std_logic_vector(9 downto 0); 
 		HORIZ_SYNC, VERT_SYNC, VGA_BLANK, VGA_CLK		: out std_logic
 		
@@ -32,6 +33,13 @@ architecture behavior of tank_game is
 
 		);
 	end component;
+
+	component leddcd is
+		port(
+			 data_in : in std_logic_vector(3 downto 0);
+			 segments_out : out std_logic_vector(6 downto 0)
+			);
+	end component;
 	
 
 	signal tank_x, new_tank_x : integer;
@@ -41,6 +49,7 @@ architecture behavior of tank_game is
 	signal scan_code_signal : std_logic_vector( 7 downto 0 );
 	signal scan_readyo_signal : std_logic;
 	signal not_reset: std_logic;
+	signal speed_out : std_logic_vector(3 downto 0);
 begin
 	vga: VGA_top_level
 		port map (clk, reset, new_tank_x, VGA_RED, VGA_GREEN, VGA_BLUE, HORIZ_SYNC, VERT_SYNC, VGA_BLANK, VGA_CLK);
@@ -85,6 +94,7 @@ begin
 		end if;
 		
 		speed <= speed_temp;
+		speed_out <= std_logic_vector(to_unsigned(speed_temp, 4));
 	end process p1;
 	p2: process(speed)
 	begin
@@ -98,4 +108,7 @@ begin
 	test3 <= '1'; else test3 <= '0';
 	end if;
 	end process p2;
+
+	decoder: leddcd
+		port map(speed_out, leds);
 end architecture behavior;
