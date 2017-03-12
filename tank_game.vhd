@@ -61,7 +61,7 @@ begin
 		variable speed_temp : integer;
 	begin	
 		speed_temp := speed_temp;
-		if (rising_edge(scan_readyo_signal)) then
+		if (scan_readyo_signal = '1' and hist1_signal = x"F0") then
 			if(scan_code_signal=x"1D") then -- w
 				if (speed < 3) then
 					speed_temp := speed_temp + 1;
