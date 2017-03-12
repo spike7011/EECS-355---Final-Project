@@ -70,6 +70,8 @@ begin
 				if (speed > 1) then
 					speed_temp := speed_temp - 1;
 				end if;
+			else
+				speed_temp := speed_temp;
 			end if;
 		end if;
 
