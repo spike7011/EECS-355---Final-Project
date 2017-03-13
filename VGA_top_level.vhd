@@ -21,7 +21,7 @@ component pixelGenerator is
 	port(
 			clk, ROM_clk, rst_n, video_on, eof 				: in std_logic;
 			pixel_row, pixel_column						    : in std_logic_vector(9 downto 0);
-			offset_x, offset_y,  offset_bx, offset_by, bul_pos_x, bul_pos_y    		: in integer;
+			tank_a_x, tank_b_x, bullet_a_y, bullet_b_y, bullet_a_x, bullet_b_x    		: in integer;
 			red_out, green_out, blue_out					: out std_logic_vector(9 downto 0)
 		);
 end component pixelGenerator;
