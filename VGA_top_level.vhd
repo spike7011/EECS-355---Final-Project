@@ -6,7 +6,7 @@ entity VGA_top_level is
 	port(
 			CLOCK_50 										: in std_logic;
 			RESET_N											: in std_logic;
-			tank_x											: in integer;
+			tank_x, tank_y											: in integer;
 	
 			--VGA 
 			VGA_RED, VGA_GREEN, VGA_BLUE 					: out std_logic_vector(9 downto 0); 
@@ -21,7 +21,7 @@ component pixelGenerator is
 	port(
 			clk, ROM_clk, rst_n, video_on, eof 				: in std_logic;
 			pixel_row, pixel_column						    : in std_logic_vector(9 downto 0);
-			offset                                    		: in integer;
+			offset_x, offset_y,  offset_bx, offset_by, bul_pos_x, bul_pos_y    		: in integer;
 			red_out, green_out, blue_out					: out std_logic_vector(9 downto 0)
 		);
 end component pixelGenerator;
@@ -49,7 +49,7 @@ begin
 		      
 
 		videoGen : pixelGenerator
-		port map(CLOCK_50, VGA_clk_int, RESET_N, video_on_int, eof, pixel_row_int, pixel_column_int, tank_x, VGA_RED, VGA_GREEN, VGA_BLUE);
+		port map(CLOCK_50, VGA_clk_int, RESET_N, video_on_int, eof, pixel_row_int, pixel_column_int, tank_x,tank_y, 0,0,tank_x, tank_y, VGA_RED, VGA_GREEN, VGA_BLUE);
 		
 --------------------------------------------------------------------------------------------
 --This section should not be modified in your design.  This section handles the VGA timing signals

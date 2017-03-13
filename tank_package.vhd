@@ -21,7 +21,7 @@ package tank_package is
 	end component;
 	component ps2 is
 		port( 	keyboard_clk, keyboard_data, clock_50MHz ,
-			reset : in std_logic;--, read : in std_logic;
+			reset : in std_logic;
 			scan_code : out std_logic_vector( 7 downto 0 );
 			scan_readyo : out std_logic;
 			hist3 : out std_logic_vector(7 downto 0);
