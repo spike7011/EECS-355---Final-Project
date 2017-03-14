@@ -39,6 +39,14 @@ package tank_package is
 			tank_clk		: out std_logic
 		);
 	end component;
+
+	component bullet_clock is
+		port (
+			clk			: in std_logic;
+			reset			: in std_logic;
+			bullet_clk		: out std_logic
+		);
+	end component;
 	
 	component bullet_position is
 		port (
@@ -75,6 +83,20 @@ package tank_package is
 			clk : in std_logic;
 			int_in : in integer;
 			int_out : inout integer);
+	end component;
+
+	component coordinate_register is
+		port(
+			clk : in std_logic;
+			int_in : in coordinate;
+			int_out : inout coordinate);
+	end component;
+
+	component std_logic_register is
+		port(
+			clk : in std_logic;
+			int_in : in std_logic;
+			int_out : inout std_logic);
 	end component;
 
 

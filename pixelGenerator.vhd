@@ -54,14 +54,11 @@ begin
 	
 	colors : colorROM
 		port map(colorAddress, ROM_clk, color);
-	--bullet_a_y <= 0;bullet_b_y <=0;
 	
 --------------------------------------------------------------------------------------------	
 	pixelDraw : process(clk, rst_n) is
 	
 	begin
-		--bullet_a_x <= tank_a_x;
-		--bullet_b_x <= tank_b_x;
 		if (rising_edge(clk)) then
 		--	if (pixel_row_int < 240 and pixel_column_int < 320) then
 		--		colorAddress <= color_green;

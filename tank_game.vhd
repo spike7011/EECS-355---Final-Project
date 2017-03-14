@@ -22,6 +22,7 @@ architecture behavior of tank_game is
 			CLOCK_50 										: in std_logic;
 			RESET_N											: in std_logic;
 			tank_x, tank_y									: in integer;
+			bullet_position_a, bullet_position_b							: in coordinate;
 			VGA_RED, VGA_GREEN, VGA_BLUE 					: out std_logic_vector(9 downto 0); 
 			HORIZ_SYNC, VERT_SYNC, VGA_BLANK, VGA_CLK		: out std_logic
 
@@ -38,11 +39,15 @@ architecture behavior of tank_game is
 	signal scan_readyo_signal 				: std_logic;
 	signal not_reset							: std_logic;
 	signal speed_out_x, speed_out_y 		: std_logic_vector(3 downto 0);
+	signal bullet_clk, bullet_fired_a, current_bullet_exists_a, new_bullet_exists_a : std_logic;
+	signal bullet_fired_b, current_bullet_exists_b, new_bullet_exists_b : std_logic;
+	signal current_bullet_position_a, current_tank_position_a, new_bullet_position_a : coordinate;
+	signal current_bullet_position_b, current_tank_position_b, new_bullet_position_b : coordinate;
 
 begin
 
 	vga: VGA_top_level
-		port map (clk, reset, new_tank_x,new_tank_y, VGA_RED, VGA_GREEN, VGA_BLUE, HORIZ_SYNC, VERT_SYNC, VGA_BLANK, VGA_CLK);
+		port map (clk, reset, new_tank_x,new_tank_y, current_bullet_position_a, current_bullet_position_b, VGA_RED, VGA_GREEN, VGA_BLUE, HORIZ_SYNC, VERT_SYNC, VGA_BLANK, VGA_CLK);
 	
 	xtank: top_tank
 		port map (tank_clk_x, reset, tank_x, new_tank_x);
@@ -58,6 +63,33 @@ begin
 		port map (tank_clk_x, new_tank_x, tank_x);
 	tank_y_register: integer_register
 		port map (tank_clk_y, new_tank_y, tank_y);
+
+	current_tank_position_a(0) <= tank_x;
+	current_tank_position_a(1) <= 0;
+
+	current_tank_position_b(0) <= tank_y;
+	current_tank_position_b(1) <= 0;
+
+	b_clock: bullet_clock
+		port map (clk, reset, bullet_clk);
+
+	bullet_a_pos_register: coordinate_register
+		port map (bullet_clk, new_bullet_position_a, current_bullet_position_a);
+
+	bullet_b_pos_register: coordinate_register
+		port map (bullet_clk, new_bullet_position_b, current_bullet_position_b);
+
+	bullet_a_exists_register: std_logic_register
+		port map (bullet_clk, new_bullet_exists_a, current_bullet_exists_a);
+
+	bullet_b_exists_register: std_logic_register
+		port map (bullet_clk, new_bullet_exists_b, current_bullet_exists_b);
+
+	bullet_a_pos: bullet_position
+		port map (bullet_clk, reset, '0', bullet_fired_a, current_bullet_exists_a, current_bullet_position_a, current_tank_position_a, new_bullet_position_a, new_bullet_exists_a);
+
+	bullet_b_pos: bullet_position
+		port map (bullet_clk, reset, '1', bullet_fired_b, current_bullet_exists_b, current_bullet_position_b, current_tank_position_b, new_bullet_position_b, new_bullet_exists_b);
 
 	not_reset <= not reset;
 
