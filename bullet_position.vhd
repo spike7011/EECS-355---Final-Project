@@ -24,12 +24,6 @@ architecture behavior of bullet_position is
 begin
 	update_position: process (clk, reset)
 	begin
-		-- update bullet on clock
-		if rising_edge(clk) then
-			new_bullet_position <= new_position_temp;
-			new_bullet_exists <= new_exists_temp;
-		end if;
-		
 		-- reset bullet position
 		if (reset = '1') then
 			new_bullet_exists <= '0';
@@ -42,6 +36,9 @@ begin
 				new_bullet_position(0) <= 0;
 				new_bullet_position(1) <= 0;
 			end if;
+		elsif rising_edge(clk) then
+			new_bullet_position <= new_position_temp;
+			new_bullet_exists <= new_exists_temp;
 		end if;
 
 	end process update_position;

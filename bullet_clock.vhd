@@ -20,9 +20,9 @@ begin
 		counter := counter;
 		if (rising_edge(clk)) then
 			counter := counter + 1;
-			if (counter >= 100000) then
+			if (counter >= 100000 and counter < 200000) then
 				bullet_clk <= '1';
-			elsif (counter >= 200000) then
+			elsif (counter >= 20) then
 				counter := 0;
 				bullet_clk <= '0';
 			end if;
