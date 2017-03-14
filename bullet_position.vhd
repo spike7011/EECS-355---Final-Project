@@ -23,6 +23,9 @@ begin
 	update_position: process (clk, reset)
 	begin
 
+		new_bullet_position <= current_bullet_position;
+		new_bullet_exists <= current_bullet_exists;
+
 		-- reset bullet position
 		if (reset = '1') then
 			new_bullet_exists <= '0';
