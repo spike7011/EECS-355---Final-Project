@@ -16,7 +16,7 @@ architecture behav of top_tank is
 begin
 	tank_process : process(clk, rst) is
 		variable DIRECTION_x : integer;
-		variable x_last : integer := 60;
+		variable x_last : integer;
 	begin
 		x_last := x_last;
 	if (rising_edge(clk)) then

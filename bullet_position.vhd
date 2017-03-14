@@ -20,9 +20,8 @@ end entity bullet_position;
 
 architecture behavior of bullet_position is
 begin
-	update_position: process (clk, reset)
+	update_position: process (clk, reset, current_tank_position, current_bullet_position, current_bullet_exists, bullet_fired)
 	begin
-	
 		-- update bullet on clock
 		if rising_edge(clk) then
 			new_bullet_exists <= '0';
