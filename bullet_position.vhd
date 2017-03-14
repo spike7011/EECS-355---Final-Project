@@ -21,6 +21,7 @@ entity bullet_position is
 		direction: in std_logic;
 
 		bullet_fired: in std_logic;
+		bullet_hit: in std_logic;
 
 		current_bullet_exists: in std_logic;
 
@@ -100,7 +101,7 @@ begin
 
 
 
-				if ((current_bullet_position(1) > 475) or (current_bullet_position(1) < 5)) then
+				if ((current_bullet_position(1) > 475) or (current_bullet_position(1) < 5) or bullet_hit = '1') then
 
 					new_bullet_exists <= '0';
 
@@ -108,13 +109,13 @@ begin
 
 						new_bullet_position(0) <= current_tank_position(0) + 60;
 
-						new_bullet_position(1) <= current_tank_position(1) + 120;
+						new_bullet_position(1) <= current_tank_position(1) + 110;
 
 					elsif (direction = '1') then
 
 						new_bullet_position(0) <= current_tank_position(0) + 60;
 
-						new_bullet_position(1) <= current_tank_position(1) + 360;
+						new_bullet_position(1) <= current_tank_position(1) - 29;
 
 					else
 
@@ -140,15 +141,15 @@ begin
 
 			if (direction = '0') then
 
-				new_bullet_position(0) <= current_tank_position(0) + 60;
+				new_bullet_position(0) <= 60;
 
-				new_bullet_position(1) <= current_tank_position(1) + 120;
+				new_bullet_position(1) <= current_tank_position(1) + 110;
 
 			elsif (direction = '1') then
 
-				new_bullet_position(0) <= current_tank_position(0) + 60;
+				new_bullet_position(0) <= 60;
 
-				new_bullet_position(1) <= current_tank_position(1) + 360;
+				new_bullet_position(1) <= current_tank_position(1) - 29;
 
 			else
 

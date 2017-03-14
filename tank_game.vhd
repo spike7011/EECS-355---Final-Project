@@ -39,14 +39,14 @@ architecture behavior of tank_game is
 	signal not_reset							: std_logic;
 	signal speed_out_x, speed_out_y 		: std_logic_vector(3 downto 0);
 	signal bullet_clk, bullet_fired_a, current_bullet_exists_a, new_bullet_exists_a : std_logic;
-	signal bullet_fired_b, current_bullet_exists_b, new_bullet_exists_b : std_logic;
+	signal bullet_fired_b, current_bullet_exists_b, new_bullet_exists_b, hit_a, hit_b : std_logic;
 	signal current_bullet_position_a, current_tank_position_a, new_bullet_position_a : coordinate;
 	signal current_bullet_position_b, current_tank_position_b, new_bullet_position_b : coordinate;
 
 begin
 
 	vga: VGA_top_level
-		port map (clk, reset, new_tank_x,new_tank_y, current_bullet_position_a, current_bullet_position_b, VGA_RED, VGA_GREEN, VGA_BLUE, HORIZ_SYNC, VERT_SYNC, VGA_BLANK, VGA_CLK);
+		port map (clk, reset, new_tank_x,new_tank_y, new_bullet_position_a, new_bullet_position_b, VGA_RED, VGA_GREEN, VGA_BLUE, HORIZ_SYNC, VERT_SYNC, VGA_BLANK, VGA_CLK);
 	
 	xtank: top_tank
 		port map (tank_clk_x, reset, tank_x, new_tank_x);
@@ -59,36 +59,42 @@ begin
 		port map (clk, reset, speed_y, tank_clk_y);
 
 	tank_x_register: integer_register
-		port map (tank_clk_x, new_tank_x, tank_x);
+		port map (clk, new_tank_x, tank_x);
 	tank_y_register: integer_register
-		port map (tank_clk_y, new_tank_y, tank_y);
+		port map (clk, new_tank_y, tank_y);
 
 	current_tank_position_a(0) <= new_tank_x;
 	current_tank_position_a(1) <= 0;
 
 	current_tank_position_b(0) <= new_tank_y;
-	current_tank_position_b(1) <= 0;
+	current_tank_position_b(1) <= 399;
 
 	b_clock: bullet_clock
 		port map (clk, reset, bullet_clk);
 
 	bullet_a_pos_register: coordinate_register
-		port map (bullet_clk, new_bullet_position_a, current_bullet_position_a);
+		port map (clk, new_bullet_position_a, current_bullet_position_a);
 
 	bullet_b_pos_register: coordinate_register
-		port map (bullet_clk, new_bullet_position_b, current_bullet_position_b);
+		port map (clk, new_bullet_position_b, current_bullet_position_b);
 
 	bullet_a_exists_register: std_logic_register
-		port map (bullet_clk, new_bullet_exists_a, current_bullet_exists_a);
+		port map (clk, new_bullet_exists_a, current_bullet_exists_a);
 
 	bullet_b_exists_register: std_logic_register
-		port map (bullet_clk, new_bullet_exists_b, current_bullet_exists_b);
+		port map (clk, new_bullet_exists_b, current_bullet_exists_b);
 
 	bullet_a_pos: bullet_position
-		port map (bullet_clk, reset, '0', bullet_fired_a, current_bullet_exists_a, current_bullet_position_a, current_tank_position_a, new_bullet_position_a, new_bullet_exists_a);
+		port map (bullet_clk, reset, '0', bullet_fired_a, hit_a, current_bullet_exists_a, current_bullet_position_a, current_tank_position_a, new_bullet_position_a, new_bullet_exists_a);
 
 	bullet_b_pos: bullet_position
-		port map (bullet_clk, reset, '1', bullet_fired_b, current_bullet_exists_b, current_bullet_position_b, current_tank_position_b, new_bullet_position_b, new_bullet_exists_b);
+		port map (bullet_clk, reset, '1', bullet_fired_b, hit_b, current_bullet_exists_b, current_bullet_position_b, current_tank_position_b, new_bullet_position_b, new_bullet_exists_b);
+
+	collision_a: bullet_hit
+		port map (new_bullet_position_a, current_tank_position_b, hit_a);
+
+	collision_b: bullet_hit
+		port map (new_bullet_position_b, current_tank_position_a, hit_b);
 
 	not_reset <= not reset;
 
@@ -114,8 +120,11 @@ begin
 				else
 					speed_temp_x := speed_temp_x;
 				end if;
+			elsif (hist0_signal = x"24" and hist1_signal =x"F0" and hist2_signal = x"24")then --E
+				bullet_fired_a <= '1';
 			else
 				speed_temp_x := speed_temp_x;
+				bullet_fired_a <= '0';
 			end if;
 			if(hist0_signal = x"7D" and hist1_signal =x"F0" and hist2_signal = x"7D") then -- 9
 				if (speed_temp_y < 3) then
@@ -129,16 +138,11 @@ begin
 				else
 					speed_temp_y := speed_temp_y;
 				end if;
+			elsif (hist0_signal = x"6C" and hist1_signal =x"F0" and hist2_signal = x"6C")then --7
+				bullet_fired_b <= '1';
 			else
 				speed_temp_y := speed_temp_y;
-			end if;
-			if (hist0_signal = x"24" and hist1_signal =x"F0" and hist2_signal = x"24")then --E
-				bullet_fired_a <= '1';
-				else bullet_fired_a <= '0';
-			end if;
-			if (hist0_signal = x"6C" and hist1_signal =x"F0" and hist2_signal = x"6C")then --7
-				bullet_fired_b <= '1';
-				else bullet_fired_b <= '0';
+				bullet_fired_b <= '0';
 			end if;
 		end if;
 
@@ -154,4 +158,5 @@ begin
 		speed_out_x <= std_logic_vector(to_unsigned(speed_temp_x, 4));
 		speed_out_y <= std_logic_vector(to_unsigned(speed_temp_y, 4));
 	end process p1;
+
 end architecture behavior;

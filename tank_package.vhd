@@ -54,6 +54,7 @@ package tank_package is
 			reset: in std_logic;
 			direction: in std_logic;
 			bullet_fired: in std_logic;
+			bullet_hit: in std_logic;
 			current_bullet_exists: in std_logic;
 			current_bullet_position : in coordinate;
 			current_tank_position: in coordinate;

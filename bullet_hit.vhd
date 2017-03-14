@@ -18,8 +18,12 @@ architecture behavior of bullet_hit is
 begin
 	bounding_boxes: process (bullet_position, enemy_position)
 	begin
-		bullet_bounding_box <= ((bullet_position(0) - (BULLET_SIZE(0) / 2)), (bullet_position(0) + (BULLET_SIZE(0) / 2)), (bullet_position(1) - (BULLET_SIZE(1) / 2)), (bullet_position(1) + (BULLET_SIZE(1) / 2)));
-		enemy_bounding_box <= ((enemy_position(0) - (TANK_SIZE(0) / 2)), (enemy_position(0) + (TANK_SIZE(0) / 2)), (enemy_position(1) - (TANK_SIZE(1) / 2)), (enemy_position(1) + (TANK_SIZE(1) / 2)));
+		bullet_bounding_box(0) <= bullet_position(0) - 5;		bullet_bounding_box(1) <= bullet_position(0) + 5;
+		bullet_bounding_box(2) <= bullet_position(1) - 5;
+		bullet_bounding_box(3) <= bullet_position(1) + 5;
+		enemy_bounding_box(0) <= enemy_position(0);		enemy_bounding_box(1) <= enemy_position(0) + 120;
+		enemy_bounding_box(2) <= enemy_position(1);
+		enemy_bounding_box(3) <= enemy_position(1) + 80;
 	end process bounding_boxes;
 	
 	collision_test: collision_detector
