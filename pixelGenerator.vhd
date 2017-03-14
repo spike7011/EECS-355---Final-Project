@@ -78,7 +78,7 @@ begin
 				colorAddress <= color_black;
 			elsif (pixel_row_int < (bullet_a_y + 5) and pixel_row_int >(bullet_a_y - 5) and pixel_column_int > (bullet_a_x - 5) and pixel_column_int < (bullet_a_x + 5)) then
 				colorAddress <= color_green;
-			elsif (pixel_row_int < (bullet_b_y + 5) and pixel_row_int >(bullet_b_y - 370) and pixel_column_int > (bullet_b_x - 5) and pixel_column_int < (bullet_b_x + 5)) then
+			elsif (pixel_row_int < (bullet_b_y + 5) and pixel_row_int >(bullet_b_y - 5) and pixel_column_int > (bullet_b_x - 5) and pixel_column_int < (bullet_b_x + 5)) then
 				colorAddress <= color_green;
 			else
 				colorAddress <= color_white;
