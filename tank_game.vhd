@@ -177,19 +177,19 @@ begin
 		variable b_counter : integer;
 	begin
 		if (rising_edge(clk)) then
-			if(hit_a = '1' and score_a < 3 and a_counter >= 1000000000) then
+			if(hit_a = '1' and score_a < 3 and a_counter >= 50000000) then
 				score_a <= score_a + 1;
 				a_counter := 0;
-			elsif (a_counter < 2000000000) then
+			elsif (a_counter < 100000000) then
 				a_counter := a_counter + 1;
 			else
 				a_counter := a_counter;
 			end if;
 
-			if(hit_b = '1' and score_b < 3 and b_counter >= 1000000000) then
+			if(hit_b = '1' and score_b < 3 and b_counter >= 50000000) then
 				score_b <= score_b + 1;
 				b_counter := 0;
-			elsif (b_counter < 2000000000) then
+			elsif (b_counter < 100000000) then
 				b_counter := b_counter + 1;
 			else
 				b_counter := b_counter;
@@ -208,8 +208,8 @@ begin
 			score_a <= 0;
 			score_b <= 0;
 			game_over <= 0;
-			a_counter := 1000000000;
-			b_counter := 1000000000;
+			a_counter := 50000000;
+			b_counter := 50000000;
 		end if;
 
 		if (score_a = 0) then
