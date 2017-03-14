@@ -122,37 +122,37 @@ begin
 		speed_temp_x := speed_temp_x;
 		speed_temp_y := speed_temp_y;
 		if (falling_edge(scan_readyo_signal)) then
-			if(hist0_signal = x"1D" and hist1_signal =x"F0" and hist2_signal =x"1D") then -- w
+			if(hist0_signal = x"1D" and not (hist1_signal =x"F0" and hist2_signal =x"1D")) then -- w
 				if (speed_temp_x < 3) then
 					speed_temp_x := speed_temp_x + 1;
 				else
 					speed_temp_x := speed_temp_x;
 				end if;
-			elsif(hist0_signal = x"15" and hist1_signal =x"F0" and hist2_signal = x"15")then -- q
+			elsif(hist0_signal = x"15" and not (hist1_signal =x"F0" and hist2_signal = x"15"))then -- q
 				if (speed_temp_x > 1) then
 					speed_temp_x := speed_temp_x - 1;
 				else
 					speed_temp_x := speed_temp_x;
 				end if;
-			elsif (hist0_signal = x"24" and hist1_signal =x"F0" and hist2_signal = x"24")then --E
+			elsif (hist0_signal = x"24" and not (hist1_signal =x"F0" and hist2_signal = x"24"))then --E
 				bullet_fired_a <= '1';
 			else
 				speed_temp_x := speed_temp_x;
 				bullet_fired_a <= '0';
 			end if;
-			if(hist0_signal = x"7D" and hist1_signal =x"F0" and hist2_signal = x"7D") then -- 9
+			if(hist0_signal = x"7D" and not (hist1_signal =x"F0" and hist2_signal = x"7D")) then -- 9
 				if (speed_temp_y < 3) then
 					speed_temp_y := speed_temp_y + 1;
 				else
 					speed_temp_y := speed_temp_y;
 				end if;
-			elsif(hist0_signal = x"75" and hist1_signal =x"F0" and hist2_signal = x"75")then -- 8
+			elsif(hist0_signal = x"75" and not (hist1_signal =x"F0" and hist2_signal = x"75"))then -- 8
 				if (speed_temp_y > 1) then
 					speed_temp_y := speed_temp_y - 1;
 				else
 					speed_temp_y := speed_temp_y;
 				end if;
-			elsif (hist0_signal = x"6C" and hist1_signal =x"F0" and hist2_signal = x"6C")then --7
+			elsif (hist0_signal = x"6C" and not (hist1_signal =x"F0" and hist2_signal = x"6C"))then --7
 				bullet_fired_b <= '1';
 			else
 				speed_temp_y := speed_temp_y;
