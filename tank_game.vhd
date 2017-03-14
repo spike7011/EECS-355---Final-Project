@@ -21,7 +21,7 @@ architecture behavior of tank_game is
 		port(
 			CLOCK_50 										: in std_logic;
 			RESET_N											: in std_logic;
-			tank_x, tank_y									: in integer;
+			tank_a_x, tank_b_x									: in integer;
 			bullet_position_a, bullet_position_b							: in coordinate;
 			VGA_RED, VGA_GREEN, VGA_BLUE 					: out std_logic_vector(9 downto 0); 
 			HORIZ_SYNC, VERT_SYNC, VGA_BLANK, VGA_CLK		: out std_logic
@@ -133,11 +133,21 @@ p1: process(scan_readyo_signal, reset)
 			else
 				speed_temp_y := speed_temp_y;
 			end if;
+			if (hist0_signal = x"24" and hist1_signal =x"F0" and hist2_signal = x"24")then --E
+				bullet_fired_a <= '1';
+				else bullet_fired_a <= '0';
+			end if;
+			if (hist0_signal = x"6C" and hist1_signal =x"F0" and hist2_signal = x"6C")then --7
+				bullet_fired_b <= '1';
+				else bullet_fired_b <= '0';
+			end if;
 		end if;
 
 		if (reset = '1') then
 			speed_temp_x := 1;
 			speed_temp_y := 1;
+			bullet_fired_a <= '0';
+		   bullet_fired_b <= '0';
 		end if;
 		
 		speed_x <= speed_temp_x;
