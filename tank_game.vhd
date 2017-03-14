@@ -64,10 +64,10 @@ begin
 	tank_y_register: integer_register
 		port map (tank_clk_y, new_tank_y, tank_y);
 
-	current_tank_position_a(0) <= tank_x;
+	current_tank_position_a(0) <= new_tank_x;
 	current_tank_position_a(1) <= 0;
 
-	current_tank_position_b(0) <= tank_y;
+	current_tank_position_b(0) <= new_tank_y;
 	current_tank_position_b(1) <= 0;
 
 	b_clock: bullet_clock
