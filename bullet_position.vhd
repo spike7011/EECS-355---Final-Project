@@ -27,7 +27,7 @@ begin
 		new_bullet_exists <= current_bullet_exists;
 
 		-- reset bullet position
-		if (reset = '1') then
+		if (rising_edge(reset))then
 			new_bullet_exists <= '0';
 			new_bullet_position(0) <= 60;
 			if (direction = '0') then
@@ -38,10 +38,8 @@ begin
 				new_bullet_position(0) <= 0;
 				new_bullet_position(1) <= 0;
 			end if;
-		end if;
-
 		-- update position on clock
-		if rising_edge(clk) then
+		elsif rising_edge(clk) then
 			new_bullet_exists <= '0';
 			new_bullet_position(0) <= current_tank_position(0) + 60;
 			new_bullet_position(1) <= current_bullet_position(1);
