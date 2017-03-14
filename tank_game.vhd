@@ -177,13 +177,13 @@ begin
 		game_over <= 0;
 		score_a <= score_a;
 		score_b <= score_b;
-		if(hit_a = '1') then
+		if(rising_edge(hit_a)) then
 			score_a <= score_a + 1;
 			if(score_a = 3) then
 				game_over <= 1;
 			end if;
 		end if;
-		if(hit_b = '1') then
+		if(rising_edge(hit_b)) then
 			score_b <= score_b + 1;
 			if(score_b = 3) then
 				game_over <= 1;
