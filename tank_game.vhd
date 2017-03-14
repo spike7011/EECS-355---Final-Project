@@ -174,26 +174,27 @@ begin
 	end process p1;
 	p2: process(reset, hit_a, hit_b)
 	begin
+		game_over <= 0;
+		score_a <= score_a;
+		score_b <= score_b;
 		if(hit_a = '1') then
 			score_a <= score_a + 1;
-				if(score_a =3) then
-					game_over <= 1;
-				else score_a <= score_a;
-				end if;
+			if(score_a = 3) then
+				game_over <= 1;
+			end if;
 		end if;
-		if (hit_b = '1') then
+		if(hit_b = '1') then
 			score_b <= score_b + 1;
-			if(score_a =3) then
-				game_over <= 2;
-			else score_b <= score_b;
+			if(score_b = 3) then
+				game_over <= 1;
 			end if;
 		end if;
 		
-	if (reset = '1') then
-	score_a <= 0;
-	score_b <= 0;
-	game_over <= 0;
-	end if;
+		if (reset = '1') then
+			score_a <= 0;
+			score_b <= 0;
+			game_over <= 0;
+		end if;
 	end process p2;
 	
 	score_disp_a <= "1000000" when score_a = 0 else
