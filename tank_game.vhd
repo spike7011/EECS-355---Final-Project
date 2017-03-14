@@ -7,7 +7,11 @@ entity tank_game is
 	port (
 		clk										: in std_logic;
 		reset										: in std_logic;
-		keyboard_clk, keyboard_data		:in std_logic;
+		keyboard_clk, keyboard_data		: in std_logic;
+		LCD_RS, LCD_E, LCD_ON, RESET_LED, SEC_LED		: OUT	STD_LOGIC;
+		LCD_RW						: BUFFER STD_LOGIC;
+		DATA_BUS				: INOUT	STD_LOGIC_VECTOR(7 DOWNTO 0);
+		score_1, score_2 : out std_logic_vector(6 downto 0);
 		VGA_RED, VGA_GREEN, VGA_BLUE 						: out std_logic_vector(9 downto 0); 
 		HORIZ_SYNC, VERT_SYNC, VGA_BLANK, VGA_CLK		: out std_logic
 		
@@ -27,7 +31,21 @@ architecture behavior of tank_game is
 
 		);
 	end component;
-
+	
+	component leddcd is
+	port(
+		 data_in : in std_logic_vector(3 downto 0);
+		 segments_out : out std_logic_vector(6 downto 0)
+		);
+	end component;
+	
+	component de2lcd IS
+	PORT(reset, clk_50Mhz			: IN	STD_LOGIC;
+		 game_over: in integer;
+		 LCD_RS, LCD_E, LCD_ON, RESET_LED, SEC_LED		: OUT	STD_LOGIC;
+		 LCD_RW						: BUFFER STD_LOGIC;
+		 DATA_BUS				: INOUT	STD_LOGIC_VECTOR(7 DOWNTO 0));
+	end component;
 	
 	signal tank_x, new_tank_x			   : integer;
 	signal tank_y, new_tank_y 				: integer;
@@ -42,7 +60,7 @@ architecture behavior of tank_game is
 	signal bullet_fired_b, current_bullet_exists_b, new_bullet_exists_b, hit_a, hit_b : std_logic;
 	signal current_bullet_position_a, current_tank_position_a, new_bullet_position_a : coordinate;
 	signal current_bullet_position_b, current_tank_position_b, new_bullet_position_b : coordinate;
-
+	signal game_over : integer;
 begin
 
 	vga: VGA_top_level
@@ -91,7 +109,7 @@ begin
 		port map (bullet_clk, reset, '1', bullet_fired_b, hit_b, current_bullet_exists_b, current_bullet_position_b, current_tank_position_b, new_bullet_position_b, new_bullet_exists_b);
 
 	collision_a: bullet_hit
-		port map (new_bullet_position_a, current_tank_position_b, hit_a);
+		port map (new_bullet_position_a, current_tank_position_b, hit_a);-- a scored
 
 	collision_b: bullet_hit
 		port map (new_bullet_position_b, current_tank_position_a, hit_b);
@@ -101,6 +119,12 @@ begin
 	keyboard_map : ps2 
 		port map(keyboard_clk, keyboard_data, clk, not_reset,scan_code_signal,scan_readyo_signal,hist3_signal,hist2_signal,hist1_signal,hist0_signal);
 
+	lcd_a: de2lcd 
+	   port map(reset, clk, game_over, LCD_RS, LCD_E, LCD_ON, RESET_LED, SEC_LED, LCD_RW, DATA_BUS);
+	led_disp1:leddcd 
+	port map(hit_a, score_1);
+	led_disp2: leddcd
+	port map(hit_b, score_2);
 	p1: process(scan_readyo_signal, reset)
 		variable speed_temp_x, speed_temp_y : integer;
 		
@@ -108,7 +132,7 @@ begin
 		speed_temp_x := speed_temp_x;
 		speed_temp_y := speed_temp_y;
 		if (falling_edge(scan_readyo_signal)) then
-			if(hist0_signal = x"1D" and hist1_signal =x"F0" and hist2_signal = x"1D") then -- w
+			if(hist0_signal = x"1D" and hist1_signal =x"F0" and hist2_signal =x"1D") then -- w
 				if (speed_temp_x < 3) then
 					speed_temp_x := speed_temp_x + 1;
 				else
@@ -145,7 +169,7 @@ begin
 				bullet_fired_b <= '0';
 			end if;
 		end if;
-
+		
 		if (reset = '1') then
 			speed_temp_x := 1;
 			speed_temp_y := 1;
@@ -158,5 +182,29 @@ begin
 		speed_out_x <= std_logic_vector(to_unsigned(speed_temp_x, 4));
 		speed_out_y <= std_logic_vector(to_unsigned(speed_temp_y, 4));
 	end process p1;
-
+	p2: process(reset, clk)
+	variable score_a, score_b: integer;
+	begin
+	if(rising_edge(clk)) then
+		if(hit_a = '1') then
+			score_a := score_a + 1;
+				if(score_a =3) then
+					game_over <= 1;
+				else score_a := score_a;
+				end if;
+		end if;
+		if (hit_b = '1') then
+			score_b := score_b + 1;
+			if(score_a =3) then
+				game_over <= 2;
+			else score_b := score_b;
+			end if;
+		end if;
+	end if;
+	if (reset = '1') then
+	score_a := 0;
+	score_b := 0;
+	game_over <= 0;
+	end if;
+	end process p2;
 end architecture behavior;

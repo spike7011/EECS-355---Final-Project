@@ -4,7 +4,8 @@ USE  IEEE.STD_LOGIC_ARITH.all;
 USE  IEEE.STD_LOGIC_UNSIGNED.all;
 
 ENTITY de2lcd IS
-	PORT(reset, clk_50Mhz				: IN	STD_LOGIC;
+	PORT(reset, clk_50Mhz			: IN	STD_LOGIC;
+		 game_over : in integer;
 		 LCD_RS, LCD_E, LCD_ON, RESET_LED, SEC_LED		: OUT	STD_LOGIC;
 		 LCD_RW						: BUFFER STD_LOGIC;
 		 DATA_BUS				: INOUT	STD_LOGIC_VECTOR(7 DOWNTO 0));
@@ -125,7 +126,11 @@ BEGIN
 						LCD_E <= '1';
 						LCD_RS <= '1';
 						LCD_RW <= '0';
-						DATA_BUS_VALUE <= X"45";
+						if (game_over = 1) then 
+							DATA_BUS_VALUE <= X"52";
+							
+						elsif (game_over = 2) then DATA_BUS_VALUE <= X"42";
+						end if;
 						state <= TOGGLE_E;
 						next_command <= WRITE_CHAR2;
 -- Write ASCII hex character in second LCD character location
@@ -133,7 +138,11 @@ BEGIN
 						LCD_E <= '1';
 						LCD_RS <= '1';
 						LCD_RW <= '0';
-						DATA_BUS_VALUE <= X"45";
+						if (game_over = 1) then 
+							DATA_BUS_VALUE <= X"45";
+							
+						elsif (game_over = 2) then DATA_BUS_VALUE <= X"4C";
+						end if;
 						state <= TOGGLE_E;
 						next_command <= WRITE_CHAR3;
 -- Write ASCII hex character in third LCD character location
@@ -141,7 +150,11 @@ BEGIN
 						LCD_E <= '1';
 						LCD_RS <= '1';
 						LCD_RW <= '0';
-						DATA_BUS_VALUE <= X"43";
+						if (game_over = 1) then 
+							DATA_BUS_VALUE <= X"44";
+							
+						elsif (game_over = 2) then DATA_BUS_VALUE <= X"55";
+						end if;
 						state <= TOGGLE_E;
 						next_command <= WRITE_CHAR4;
 -- Write ASCII hex character in fourth LCD character location
@@ -149,7 +162,10 @@ BEGIN
 						LCD_E <= '1';
 						LCD_RS <= '1';
 						LCD_RW <= '0';
-						DATA_BUS_VALUE <= X"53";
+						if (game_over = 1) then 
+							DATA_BUS_VALUE <= X"20";
+						elsif (game_over = 2) then DATA_BUS_VALUE <= X"45";
+						end if;
 						state <= TOGGLE_E;
 						next_command <= WRITE_CHAR5;
 -- Write ASCII hex character in fifth LCD character location
@@ -157,7 +173,10 @@ BEGIN
 						LCD_E <= '1';
 						LCD_RS <= '1';
 						LCD_RW <= '0';
-						DATA_BUS_VALUE <= X"33";
+						if (game_over = 1) then 
+							DATA_BUS_VALUE <= X"57";
+						elsif (game_over = 2) then DATA_BUS_VALUE <= X"20";
+						end if;
 						state <= TOGGLE_E;
 						next_command <= WRITE_CHAR6;
 -- Write ASCII hex character in sixth LCD character location
@@ -165,7 +184,10 @@ BEGIN
 						LCD_E <= '1';
 						LCD_RS <= '1';
 						LCD_RW <= '0';
-						DATA_BUS_VALUE <= X"35";
+						if (game_over = 1) then 
+							DATA_BUS_VALUE <= X"49";
+						elsif (game_over = 2) then DATA_BUS_VALUE <= X"57";
+						end if;
 						state <= TOGGLE_E;
 						next_command <= WRITE_CHAR7;
 -- Write ASCII hex character in seventh LCD character location
@@ -173,7 +195,11 @@ BEGIN
 						LCD_E <= '1';
 						LCD_RS <= '1';
 						LCD_RW <= '0';
-						DATA_BUS_VALUE <= X"35";
+						if (game_over = 1) then 
+							DATA_BUS_VALUE <= X"4E";
+							
+						elsif (game_over = 2) then DATA_BUS_VALUE <= X"49";
+						end if;
 						state <= TOGGLE_E;
 						next_command <= WRITE_CHAR8;
 -- Write ASCII hex character in eighth LCD character location
@@ -181,21 +207,33 @@ BEGIN
 						LCD_E <= '1';
 						LCD_RS <= '1';
 						LCD_RW <= '0';
-						DATA_BUS_VALUE <= X"66";
+						if (game_over = 1) then 
+							DATA_BUS_VALUE <= X"53";
+							
+						elsif (game_over = 2) then DATA_BUS_VALUE <= X"4E";
+						end if;
 						state <= TOGGLE_E;
 						next_command <= WRITE_CHAR9;
 				WHEN WRITE_CHAR9 =>
 						LCD_E <= '1';
 						LCD_RS <= '1';
 						LCD_RW <= '0';
-						DATA_BUS_VALUE <= X"75";
+						if (game_over = 1) then 
+							DATA_BUS_VALUE <= X"21";
+							
+						elsif (game_over = 2) then DATA_BUS_VALUE <= X"53";
+						end if;
 						state <= TOGGLE_E;
 						next_command <= WRITE_CHAR10;
 				WHEN WRITE_CHAR10 =>
 						LCD_E <= '1';
 						LCD_RS <= '1';
 						LCD_RW <= '0';
-						DATA_BUS_VALUE <= X"6e";
+						if (game_over = 1) then 
+							DATA_BUS_VALUE <= X"20";
+							
+						elsif (game_over = 2) then DATA_BUS_VALUE <= X"21";
+						end if;
 						state <= TOGGLE_E;
 						next_command <= RETURN_HOME;
 
