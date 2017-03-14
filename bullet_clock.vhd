@@ -22,7 +22,7 @@ begin
 			counter := counter + 1;
 			if (counter >= 100000 and counter < 200000) then
 				bullet_clk <= '1';
-			elsif (counter >= 20) then
+			elsif (counter >= 200000) then
 				counter := 0;
 				bullet_clk <= '0';
 			end if;

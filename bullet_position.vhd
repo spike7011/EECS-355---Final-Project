@@ -19,14 +19,10 @@ entity bullet_position is
 end entity bullet_position;
 
 architecture behavior of bullet_position is
-	signal new_position_temp: coordinate;
-	signal new_exists_temp: std_logic;
 begin
 	update_position: process (clk, reset)
 	begin
 
-		new_bullet_exists <= current_bullet_exists;
-		new_bullet_position <= current_bullet_position;
 		-- reset bullet position
 		if (reset = '1') then
 			new_bullet_exists <= '0';
@@ -39,52 +35,48 @@ begin
 				new_bullet_position(0) <= 0;
 				new_bullet_position(1) <= 0;
 			end if;
-		elsif rising_edge(clk) then
-			new_bullet_position <= new_position_temp;
-			new_bullet_exists <= new_exists_temp;
 		end if;
 
-	end process update_position;
-
-	async: process (current_tank_position, current_bullet_position, current_bullet_exists, bullet_fired)
-	begin
-		new_exists_temp <= '0';
-		new_position_temp(0) <= current_tank_position(0) + 60;
-		new_position_temp(1) <= current_bullet_position(1);
-		
-		-- bullet firing event
-		if ((bullet_fired = '1') and (current_bullet_exists = '0')) then
-			new_exists_temp <= '1';
-			new_position_temp(0) <= current_tank_position(0) + 60;
-			new_position_temp(1) <= current_bullet_position(1);
+		-- update position on clock
+		if rising_edge(clk) then
+			new_bullet_exists <= '0';
+			new_bullet_position(0) <= current_tank_position(0) + 60;
+			new_bullet_position(1) <= current_bullet_position(1);
 			
-		-- bullet movement while in the air	
-		elsif (current_bullet_exists = '1') then
-			new_exists_temp <= '1';
-			new_position_temp(0) <= current_bullet_position(0);
-			
-			-- bullet travels down if direction == 0, up if direction == 1
-			if (direction = '0') then
-				new_position_temp(1) <= current_bullet_position(1) + 1;
-			elsif (direction = '1') then
-				new_position_temp(1) <= current_bullet_position(1) - 1;
-			else
-				new_position_temp(1) <= current_bullet_position(1);
-			end if;
-			if ((current_bullet_position(1) > 475) or (current_bullet_position(1) < 5)) then
-				new_bullet_exists <= '0';
+			-- bullet firing event
+			if ((bullet_fired = '1') and (current_bullet_exists = '0')) then
+				new_bullet_exists <= '1';
+				new_bullet_position(0) <= current_tank_position(0) + 60;
+				new_bullet_position(1) <= current_bullet_position(1);
+				
+			-- bullet movement while in the air	
+			elsif (current_bullet_exists = '1') then
+				new_bullet_exists <= '1';
+				new_bullet_position(0) <= current_bullet_position(0);
+				
+				-- bullet travels down if direction == 0, up if direction == 1
 				if (direction = '0') then
-					new_position_temp(0) <= current_tank_position(0) + 60;
-					new_position_temp(1) <= current_tank_position(1) + 120;
+					new_bullet_position(1) <= current_bullet_position(1) + 1;
 				elsif (direction = '1') then
-					new_position_temp(0) <= current_tank_position(0) + 60;
-					new_position_temp(1) <= current_tank_position(1) + 360;
+					new_bullet_position(1) <= current_bullet_position(1) - 1;
 				else
-					new_position_temp(0) <= 0;
-					new_position_temp(1) <= 0;
+					new_bullet_position(1) <= current_bullet_position(1);
+				end if;
+				if ((current_bullet_position(1) > 475) or (current_bullet_position(1) < 5)) then
+					new_bullet_exists <= '0';
+					if (direction = '0') then
+						new_bullet_position(0) <= current_tank_position(0) + 60;
+						new_bullet_position(1) <= current_tank_position(1) + 120;
+					elsif (direction = '1') then
+						new_bullet_position(0) <= current_tank_position(0) + 60;
+						new_bullet_position(1) <= current_tank_position(1) + 360;
+					else
+						new_bullet_position(0) <= 0;
+						new_bullet_position(1) <= 0;
+					end if;
 				end if;
 			end if;
 		end if;
-	end process async;
+	end process update_position;
 end architecture behavior;
 		
