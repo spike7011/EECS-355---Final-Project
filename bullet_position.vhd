@@ -26,20 +26,8 @@ begin
 		new_bullet_position <= current_bullet_position;
 		new_bullet_exists <= current_bullet_exists;
 
-		-- reset bullet position
-		if (rising_edge(reset))then
-			new_bullet_exists <= '0';
-			new_bullet_position(0) <= 60;
-			if (direction = '0') then
-				new_bullet_position(1) <= 120;
-			elsif (direction = '1') then
-				new_bullet_position(1) <= 360;
-			else
-				new_bullet_position(0) <= 0;
-				new_bullet_position(1) <= 0;
-			end if;
 		-- update position on clock
-		elsif rising_edge(clk) then
+		if rising_edge(clk) then
 			new_bullet_exists <= '0';
 			new_bullet_position(0) <= current_tank_position(0) + 60;
 			new_bullet_position(1) <= current_bullet_position(1);
@@ -76,6 +64,20 @@ begin
 						new_bullet_position(1) <= 0;
 					end if;
 				end if;
+			end if;
+		end if;
+
+		-- reset bullet position
+		if (reset = '1') then
+			new_bullet_exists <= '0';
+			new_bullet_position(0) <= 60;
+			if (direction = '0') then
+				new_bullet_position(1) <= 120;
+			elsif (direction = '1') then
+				new_bullet_position(1) <= 360;
+			else
+				new_bullet_position(0) <= 0;
+				new_bullet_position(1) <= 0;
 			end if;
 		end if;
 	end process update_position;
