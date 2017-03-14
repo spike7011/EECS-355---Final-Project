@@ -103,7 +103,7 @@ begin
 		port map (bullet_clk, reset, '1', bullet_fired_b, hit_b, current_bullet_exists_b, current_bullet_position_b, current_tank_position_b, new_bullet_position_b, new_bullet_exists_b);
 
 	collision_a: bullet_hit
-		port map (new_bullet_position_a, current_tank_position_b, hit_a);-- a scored
+		port map (new_bullet_position_a, current_tank_position_b, hit_a);
 
 	collision_b: bullet_hit
 		port map (new_bullet_position_b, current_tank_position_a, hit_b);
@@ -172,39 +172,69 @@ begin
 		speed_out_x <= std_logic_vector(to_unsigned(speed_temp_x, 4));
 		speed_out_y <= std_logic_vector(to_unsigned(speed_temp_y, 4));
 	end process p1;
-	p2: process(reset, hit_a, hit_b)
+	p2: process(clk, reset)
+		variable a_counter : integer;
+		variable b_counter : integer;
 	begin
-		game_over <= 0;
-		score_a <= score_a;
-		score_b <= score_b;
-		if(rising_edge(hit_a)) then
-			score_a <= score_a + 1;
-			if(score_a = 3) then
-				game_over <= 1;
+		if (rising_edge(clk)) then
+			if(hit_a = '1' and score_a < 3 and a_counter >= 1000000000) then
+				score_a <= score_a + 1;
+				a_counter := 0;
+			elsif (a_counter < 2000000000) then
+				a_counter := a_counter + 1;
+			else
+				a_counter := a_counter;
+			end if;
+
+			if(hit_b = '1' and score_b < 3 and b_counter >= 1000000000) then
+				score_b <= score_b + 1;
+				b_counter := 0;
+			elsif (b_counter < 2000000000) then
+				b_counter := b_counter + 1;
+			else
+				b_counter := b_counter;
 			end if;
 		end if;
-		if(rising_edge(hit_b)) then
-			score_b <= score_b + 1;
-			if(score_b = 3) then
-				game_over <= 1;
-			end if;
+
+		if (score_a = 3) then
+			game_over <= 1;
+		elsif (score_b = 3) then
+			game_over <= 2;
+		else
+			game_over <= 0;
 		end if;
 		
 		if (reset = '1') then
 			score_a <= 0;
 			score_b <= 0;
 			game_over <= 0;
+			a_counter := 1000000000;
+			b_counter := 1000000000;
+		end if;
+
+		if (score_a = 0) then
+			score_disp_a <= "1000000";
+		elsif (score_a = 1) then
+			score_disp_a <= "1111001";
+		elsif (score_a = 2) then
+			score_disp_a <= "0100100";
+		elsif (score_a = 3) then
+			score_disp_a <= "0110000";
+		else
+			score_disp_a <= "0001110";
+		end if;
+
+		if (score_b = 0) then
+			score_disp_b <= "1000000";
+		elsif (score_b = 1) then
+			score_disp_b <= "1111001";
+		elsif (score_b = 2) then
+			score_disp_b <= "0100100";
+		elsif (score_b = 3) then
+			score_disp_b <= "0110000";
+		else
+			score_disp_b <= "0001110";
 		end if;
 	end process p2;
-	
-	score_disp_a <= "1000000" when score_a = 0 else
-		   	   "1111001" when score_a = 1 else 
-		   	   "0100100" when score_a = 2 else
-					"0110000" when score_a = 3 else
-					"0001110";
-	score_disp_b <= "1000000" when score_b = 0 else
-		   	   "1111001" when score_b = 1 else 
-		   	   "0100100" when score_b = 2 else
-					"0110000" when score_b = 3 else
-					"0001110";				
+			
 end architecture behavior;
