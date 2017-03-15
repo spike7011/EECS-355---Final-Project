@@ -16,7 +16,7 @@ package tank_package is
 		port(
 		clk : in std_logic;
 		rst : in std_logic;
-		x_in : in integer;
+		score : in integer;
 		x_out : out integer);
 	end component;
 	component ps2 is

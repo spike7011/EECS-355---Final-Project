@@ -12,6 +12,7 @@ entity tank_game is
 		LCD_RW						: BUFFER STD_LOGIC;
 		DATA_BUS				: INOUT	STD_LOGIC_VECTOR(7 DOWNTO 0);
 		score_disp_a, score_disp_b : out std_logic_vector(6 downto 0);
+		
 		VGA_RED, VGA_GREEN, VGA_BLUE 						: out std_logic_vector(9 downto 0); 
 		HORIZ_SYNC, VERT_SYNC, VGA_BLANK, VGA_CLK		: out std_logic
 		
@@ -61,9 +62,9 @@ begin
 		port map (clk, reset, new_tank_x,new_tank_y, new_bullet_position_a, new_bullet_position_b, VGA_RED, VGA_GREEN, VGA_BLUE, HORIZ_SYNC, VERT_SYNC, VGA_BLANK, VGA_CLK);
 	
 	xtank: top_tank
-		port map (tank_clk_x, reset, tank_x, new_tank_x);
+		port map (tank_clk_x, reset, score_b, new_tank_x);
 	ytank: top_tank
-		port map (tank_clk_y, reset, tank_y, new_tank_y);
+		port map (tank_clk_y, reset, score_a, new_tank_y);
 
 	tank_clock_x: tank_clock
 		port map (clk, reset, speed_x, tank_clk_x); 
@@ -114,7 +115,8 @@ begin
 		port map(keyboard_clk, keyboard_data, clk, not_reset,scan_code_signal,scan_readyo_signal,hist3_signal,hist2_signal,hist1_signal,hist0_signal);
 
 	lcd_a: de2lcd 
-	   port map(reset, clk, game_over, LCD_RS, LCD_E, LCD_ON, RESET_LED, SEC_LED, LCD_RW, DATA_BUS);
+	   port map(not_reset, clk, game_over, LCD_RS, LCD_E, LCD_ON, RESET_LED, SEC_LED, LCD_RW, DATA_BUS);
+
 	p1: process(scan_readyo_signal, reset)
 		variable speed_temp_x, speed_temp_y : integer;
 		
@@ -177,7 +179,7 @@ begin
 		variable b_counter : integer;
 	begin
 		if (rising_edge(clk)) then
-			if(hit_a = '1' and score_a < 3 and a_counter >= 50000000) then
+			if(hit_a = '1' and score_a < 3 and a_counter >= 25000000) then
 				score_a <= score_a + 1;
 				a_counter := 0;
 			elsif (a_counter < 100000000) then
@@ -186,7 +188,7 @@ begin
 				a_counter := a_counter;
 			end if;
 
-			if(hit_b = '1' and score_b < 3 and b_counter >= 50000000) then
+			if(hit_b = '1' and score_b < 3 and b_counter >= 25000000) then
 				score_b <= score_b + 1;
 				b_counter := 0;
 			elsif (b_counter < 100000000) then
@@ -195,14 +197,6 @@ begin
 				b_counter := b_counter;
 			end if;
 		end if;
-
-		if (score_a = 3) then
-			game_over <= 1;
-		elsif (score_b = 3) then
-			game_over <= 2;
-		else
-			game_over <= 0;
-		end if;
 		
 		if (reset = '1') then
 			score_a <= 0;
@@ -210,6 +204,14 @@ begin
 			game_over <= 0;
 			a_counter := 50000000;
 			b_counter := 50000000;
+		end if;
+
+		if (score_a = 3) then
+			game_over <= 1;
+		elsif (score_b = 3) then
+			game_over <= 2;
+		else
+			game_over <= 0;
 		end if;
 
 		if (score_a = 0) then

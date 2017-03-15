@@ -7,7 +7,7 @@ entity top_tank is
 	port(
 	clk : in std_logic;
 	rst : in std_logic;
-	x_in: in integer;
+	score: in integer;
 	x_out : out integer);
 end entity;
 
@@ -29,10 +29,14 @@ begin
 	   x_last := x_last + DIRECTION_x;
 	end if;
 
-		if (rst = '1') then
-			x_last := 0;
-			DIRECTION_x := 1;
-		end if;
+	if (rst = '1') then
+		x_last := 0;
+		DIRECTION_x := 1;
+	end if;
+
+	if (score = 3) then
+		x_last := 640;
+	end if;
 
 	x_out <= x_last;
 	
